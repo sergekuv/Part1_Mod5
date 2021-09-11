@@ -9,7 +9,7 @@ namespace Part1_Mod5
             //Task_5_1_1();
             //Task_5_1_5();
             //Task_5_1_6();
-            Task_5_2_2();
+            Task_5_2_2(); //Также и 5.2.3
 
 
 
@@ -61,7 +61,7 @@ namespace Part1_Mod5
             Console.WriteLine();
         }
 
-        private static (string Name, int Age, string[] favColors) EnterUserFromConsole()
+        private static (string Name, int Age, string[] favColors) EnterUserFromConsole()  
         {
             //вводим информацию о пользователи с консоли
             const int colorsLen = 3; //длина массива цветов
@@ -73,7 +73,7 @@ namespace Part1_Mod5
             string[] colors = new string[colorsLen];
             for (int i = 0; i < colorsLen; i++)
             {
-                Console.Write("Введите название цвета на английском ({0} из {1}): ", i+1, colorsLen);
+                Console.Write("{2}, введите название цвета на английском ({0} из {1}): ", i+1, colorsLen, name); //исправлено в соотв. с требованием 5.2.3
                 colors[i] = Console.ReadLine().ToLower();
             }
             return (name, age, colors);
