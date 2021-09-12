@@ -14,11 +14,16 @@ namespace Part1_Mod5
             //Task_5_2_18();
             //Task_5_3_1();
             //Task_5_3_8();
-            Task_5_3_13();
+            //Task_5_3_13();
+            //Task_5_5_4();
+            //Task_5_5_5();
+            //Task_5_5_8();
+            Task_5_6();
 
             Console.WriteLine("\nEnd");
         }
 
+        #region 5_1
         static void Task_5_1_1() //Задание 5.1.1
         {
             Console.WriteLine("-- 5.1.1 --");
@@ -74,7 +79,8 @@ namespace Part1_Mod5
             Console.WriteLine("\n-- end of 5.1.6 --");
 
         }
-
+        #endregion
+        #region 5_2
         private static void Task_5_2_2() //Вводим и выводим данные пользователя, включая цвета
         {
             Console.WriteLine("\n-- 5.2.2 --");
@@ -111,6 +117,8 @@ namespace Part1_Mod5
             Console.WriteLine("\n-- end of 5.2.18 --");
 
         }
+        #endregion
+        #region 5_3
         private static void Task_5_3_1() //Проверяем передачу по ссылке и по значению
         {
             Console.WriteLine("\n-- 5.3.1 --");
@@ -165,7 +173,82 @@ namespace Part1_Mod5
             sorterAsc = SortArrayAsc(arr);
             sortedDesc = SortArrayDesc(arr);
         }
+        #endregion
+        #region 5_5
+        private static void Task_5_5_4()
+        {
+            Console.Write("Введите фразу для эха: ");
+            Echo(Console.ReadLine());
+            
+        }
 
+        private static void Task_5_5_5()
+        {
+            Console.Write("Введите целое число для расчета факториала: ");
+            bool enteredInt = UInt32.TryParse(Console.ReadLine(), out uint num);
+            Console.WriteLine($"Факториал {num} равен {Factorial(num)}"); 
+        }
+
+        private static void Task_5_5_8() //Необходимо написать рекурсивный метод, который возводит введенное число N типа int в указанную степень pow типа byte.
+        {
+            Console.Write("Введите целое число: ");
+            bool numIsInt = int.TryParse(Console.ReadLine(), out int num);
+            Console.Write("Введите степень (целое положительное число): ");
+            bool powIsInt = byte.TryParse(Console.ReadLine(), out byte pow);
+            Console.WriteLine($"{num}**{pow} = {PowerUp(num, pow)}");
+
+        }
+        static int PowerUp(int baseNum, byte power)
+        {
+            if (power == 0) return 1;
+            checked
+            {
+                try
+                {
+                    return baseNum * PowerUp(baseNum, (byte)(power - 1));
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return 0;
+                }
+            }
+        }
+        private static uint Factorial(uint num)
+        {
+            checked
+            {
+                try
+                {
+                    return num == 0 ? 1 : num * Factorial(num - 1);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return 0;
+                }
+            }
+        }
+
+        private static void Echo(string s)
+        {
+            Console.ForegroundColor = ((ConsoleColor)(s.Length % 16));
+            Console.WriteLine(s);
+            if (s.Length > 2)
+            {
+                Echo(s.Remove(0, 2));
+            }
+        }
+
+        #endregion
+
+        #region 5_6
+        private static void Task_5_6()
+        {
+
+        }
+        #endregion
+        #region accessories
         private static int[] SortArrayAsc(int[] arr)
         {
             int[] tempArr = new int[arr.Length];
@@ -328,7 +411,7 @@ namespace Part1_Mod5
             }
             return (name, age, colors);
         }
-
+        #endregion
 
     }
 }
