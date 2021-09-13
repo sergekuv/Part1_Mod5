@@ -6,6 +6,10 @@ namespace Part1_Mod5
     {
         static void Main(string[] args)
         {
+            Task_5_6();     //Понимаю, что методы задания 5.6 нужно вызывать из Main, но из соображений консистентности кода пренебрегу этим требованием
+                            //Надеюсь, это н вызовет серьезных неудобств. На всякий случай прошу простить меня за эту вольность
+
+            //Остальные задачи модукля 5. Для выполнения нужной задачи снимите комментарий. 
             //Task_5_1_1();
             //Task_5_1_5();
             //Task_5_1_6(); //она же 5.2.8, она же 5.2.14
@@ -18,10 +22,301 @@ namespace Part1_Mod5
             //Task_5_5_4();
             //Task_5_5_5();
             //Task_5_5_8();
-            Task_5_6();
 
             Console.WriteLine("\nEnd");
         }
+        #region 5_6
+        private static void Task_5_6() // Необходимо написать программу в классе Program со следующим функционалом:
+                                       // Необходимо создать метод, который заполняет данные с клавиатуры по пользователю(возвращает кортеж) :
+                                       // Имя; Фамилия; Возраст; Наличие питомца;
+                                       // Если питомец есть, то запросить количество питомцев;
+                                       // Если питомец есть, вызвать метод, принимающий на вход количество питомцев и возвращающий массив их кличек(заполнение с клавиатуры);
+                                       // Запросить количество любимых цветов;
+                                       // Вызвать метод, который возвращает массив любимых цветов по их количеству(заполнение с клавиатуры);
+                                       // Сделать проверку, ввёл ли пользователь корректные числа: возраст, количество питомцев, количество цветов в отдельном методе;
+                                       // Требуется проверка корректного ввода значений и повтор ввода, если ввод некорректен;
+                                       // Корректный ввод: ввод числа типа int больше 0.
+                                       // Метод, который принимает кортеж из предыдущего шага и показывает на экран данные.
+                                       // Вызов методов из метода Main.
+        {
+            //Вопрос: насколько правильно делать такой длинный кортеж? В материалах модуля говорили о семи полях, а тут восемь..
+            
+            Console.WriteLine("-- 5.6 --");
+            (string FisrsName, string LastName, byte Age, bool HasPet, byte numOfPets, string[] PetNames, byte NumOfColors, string[] Colors) user56 = EnterUser56Info();
+            ShowUser56Info(user56);
+            Console.WriteLine("-- end of 5.6 --");
+        }
+
+        private static (string FisrsName, string LastName, byte Age, bool HasPet, byte numOfPets, string[] PetNames, byte NumOfColors, string[] Colors) EnterUser56Info()
+        {
+            string fisrsName, lastName;
+            byte age, numOfPets = 0, numOfColors = 0;
+            bool hasPet, hasColors;  
+            string[] petNames, colors;
+            fisrsName = GetString("Введите Ваше имя");
+            lastName = GetString("Введите фамилию");
+            age = GetByte("Введите возраст");
+            if (hasPet = GetBool("У Вас есть питомцы? "))
+            {
+                petNames = GetStringArray("Питомцы", out numOfPets);
+            }
+            else
+            {
+                petNames = new string[0];
+            }
+
+            if (GetBool("У Вас есть любимые цвета?"))
+            {
+                colors = GetStringArray("Цвета", out numOfColors);
+            }
+            else
+            {
+                colors = new string[0];
+            }
+
+            return (fisrsName, lastName, age, hasPet, numOfPets, petNames, numOfColors, colors);
+        }
+        private static void ShowUser56Info((string FisrsName, string LastName, byte Age, bool HasPet, byte numOfPets, string[] PetNames, byte NumOfColors, string[] Colors) user56)
+        {
+            ConsoleColor initColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Name: {user56.FisrsName} {user56.LastName}; Age: {user56.Age}; HasPet(s): {user56.HasPet}{(user56.HasPet ? "; Number of pets: " : "")} " +
+                $"{(user56.HasPet ? user56.numOfPets : "")}; Number of favorite colors: {user56.NumOfColors}");
+            ShowStringArray("Pet names: ", user56.PetNames);
+            ShowStringArray("Favorite colors: ", user56.Colors);
+            Console.ForegroundColor = initColor;
+        }
+
+        private static void ShowStringArray(string s, string[] arr)
+        {
+            if (arr.Length > 0)
+            {
+                Console.Write(s);
+                foreach (string c in arr)
+                {
+                    Console.Write(c + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        private static string[] GetStringArray(string message, out byte numOfItems)
+        {
+            numOfItems = GetByte($"{message} - введите количество ");
+            string[] s = new string[numOfItems];
+            for (int i = 0; i < numOfItems; i++)
+            {
+                s[i] = GetString("Введите имя/название");
+            }
+            return s;
+        }
+
+
+        private static byte GetByte(string message) // Ввод с консоли значения типа byte с проверкой на положительность. На влезание в 255 не проверяем
+        {
+            byte num;
+            do
+            {
+                Console.Write(message + " (целое положительное число до 255): ");
+                bool byteEntered = byte.TryParse(Console.ReadLine(), out num);
+            } while (num <= 0);
+            return num;
+        }
+        private static string GetString(string message) // Ввод с консоли значения типа byte с проверкой на непустоту
+        {
+            string s;
+            do
+            {
+                Console.Write(message + ": ");
+                s = (Console.ReadLine());
+            } while (String.IsNullOrWhiteSpace(s)); // or IsNulOrEmpty?
+            return s;
+        }
+        private static bool GetBool(string message) // Ввод с консоли значения типа bool с проверкой 
+        {
+            bool b;
+            do
+            {
+                Console.Write(message + " (y или n): ");
+                string s = Console.ReadLine().ToLower();
+                if (s == "y")
+                {
+                    return true;
+                }
+                else if (s == "n")
+                {
+                    return false;
+                }
+            } while (true);
+        }
+
+
+        #endregion
+        #region accessories
+        private static int[] SortArrayAsc(int[] arr)
+        {
+            int[] tempArr = new int[arr.Length];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                tempArr[i] = arr[i];
+            }
+            Array.Sort(tempArr);
+            return tempArr;
+        }
+
+        private static int[] SortArrayDesc(int[] arr)
+        {
+            int[] tempArr = SortArrayAsc(arr);
+            Array.Reverse(tempArr);
+            return tempArr;
+        }
+
+        static void BigDataOperation(in int[] arr, in int item)
+        {
+            arr[0] = 4;
+            //item = 77; //Comp. Error
+        }
+
+
+        private static void SortArray(int[] arr)
+        {
+            Console.WriteLine("Сортируем массив..");
+            int temp;       //переменная для обмена значениями между элементами массива
+            //int position;   //позиция в массиве, где находится самая маленькая переменная для данной итерации (ее и будем менять местами с текущей)
+            for (int i = 0; i < arr.Length; i++)
+            {
+                for (int j = i + 1; j < arr.Length; j++)
+                {
+                    if (arr[j] < arr[i])
+                    {
+                        temp = arr[i];
+                        arr[i] = arr[j];
+                        arr[j] = temp;
+                    }
+                }
+            }
+        }
+
+        private static void ShowArray(ref int[] arr, bool sort = false)  //выводим элементы массива на консоль
+        {
+            if (sort)
+            {
+                SortArray(arr);
+            }
+            Console.Write("Вот элементы массива: ");
+            foreach (int i in arr)
+            {
+                Console.Write(i + " ");
+            }
+            Console.WriteLine();
+        }
+
+        private static int[] GetArrayFromConsole(int arrLen = 3)    //вводим элементы массива с консоли
+        {
+            int[] myArray = new int[arrLen];
+            for (int i = 0; i < arrLen; i++)
+            {
+                Console.Write($"Введите целое число - элемент массива номер {i + 1} из {arrLen}: ");
+                bool enteredInt = int.TryParse(Console.ReadLine(), out myArray[i]);
+            }
+            return myArray;
+        }
+
+        private static int[] GetArrayFromConsoleRef(ref int arrLen)    //вводим элементы массива с консоли
+        {
+            arrLen = 6;
+            int[] myArray = new int[arrLen];
+            for (int i = 0; i < arrLen; i++)
+            {
+                Console.Write($"Введите целое число - элемент массива номер {i + 1} из {arrLen}: ");
+                bool enteredInt = int.TryParse(Console.ReadLine(), out myArray[i]);
+            }
+            return myArray;
+        }
+
+        static string GetColorFromConsole() => Console.ReadLine().ToLower();  //нужны ли такие "однооператорные" методы? Попросить пару примеров, когда они нужны
+        private static void ShowColor(string color, string text = "Вы выбрали")  //Временно меняем цвет фона консоли на выбранный цвет
+        {
+            ConsoleColor initForeground = Console.ForegroundColor;
+            ConsoleColor initBackground = Console.BackgroundColor;
+            Console.ForegroundColor = ConsoleColor.Black;
+            switch (color)
+            {
+                case "cyan":
+                    Console.BackgroundColor = ConsoleColor.Cyan;
+                    break;
+                case "red":
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    break;
+                case "green":
+                    Console.BackgroundColor = ConsoleColor.Green;
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.Write($"{(text == "Вы выбрали" ? "(Такого цвета нет в меню, получите серый ) " : "")}");
+                    break;
+            }
+            Console.WriteLine($"{text} {color}");
+            Console.ForegroundColor = initForeground;
+            Console.BackgroundColor = initBackground;
+        }
+
+        private static void PrintUser((string Name, int Age, string[] favColors) user)
+        {
+            Console.WriteLine("Информация о пользвоателе: ");
+            Console.Write($"Имя: {user.Name}; Вoзраст: {user.Age}; Любимые цвета: ");
+            PrintColors(user.favColors);
+        }
+
+        private static void PrintColors(string[] favColors)
+        {
+            ConsoleColor currentForeground = Console.ForegroundColor;
+            ConsoleColor currentBackground = Console.BackgroundColor;
+            foreach (string item in favColors)
+            {
+                Console.ForegroundColor = ConsoleColor.Black;
+                switch (item)
+                {
+                    case "red":
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        break;
+                    case "green":
+                        Console.BackgroundColor = ConsoleColor.Green;
+                        break;
+                    case "cyan":
+                        Console.BackgroundColor = ConsoleColor.Cyan;
+                        break;
+                    default:
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.Write("(используем серый вместо) ");
+                        break;
+                }
+                Console.Write(" " + item + " ");
+            }
+            Console.ForegroundColor = currentForeground;
+            Console.BackgroundColor = currentBackground;
+            Console.WriteLine();
+        }
+
+        private static (string Name, int Age, string[] favColors) EnterUserFromConsole()
+        {
+            //вводим информацию о пользователи с консоли
+            const int colorsLen = 3; //длина массива цветов
+            Console.Write("Введите имя: ");
+            string name = Console.ReadLine();
+            Console.Write("Введите возраст (целое число цифрами): ");
+            int age;
+            bool ageIsCorrect = Int32.TryParse(Console.ReadLine(), out age);
+            string[] colors = new string[colorsLen];
+            for (int i = 0; i < colorsLen; i++)
+            {
+                Console.Write("{2}, введите название цвета на английском ({0} из {1}): ", i + 1, colorsLen, name); //исправлено в соотв. с требованием 5.2.3
+                colors[i] = Console.ReadLine().ToLower();
+            }
+            return (name, age, colors);
+        }
+        #endregion
+
 
         #region 5_1
         static void Task_5_1_1() //Задание 5.1.1
@@ -242,176 +537,6 @@ namespace Part1_Mod5
 
         #endregion
 
-        #region 5_6
-        private static void Task_5_6()
-        {
-
-        }
-        #endregion
-        #region accessories
-        private static int[] SortArrayAsc(int[] arr)
-        {
-            int[] tempArr = new int[arr.Length];
-            for (int i = 0; i < arr.Length; i++)
-            {
-                tempArr[i] = arr[i];
-            }
-            Array.Sort(tempArr);
-            return tempArr;
-        }
-
-        private static int[] SortArrayDesc(int[] arr)
-        {
-            int[] tempArr = SortArrayAsc(arr);
-            Array.Reverse(tempArr);
-            return tempArr;
-        }
-
-        static void BigDataOperation(in int[] arr, in int item)
-        {
-            arr[0] = 4;
-            //item = 77; //Comp. Error
-        }
-
-
-        private static void SortArray(int[] arr) 
-        {
-            Console.WriteLine("Сортируем массив..");
-            int temp;       //переменная для обмена значениями между элементами массива
-            //int position;   //позиция в массиве, где находится самая маленькая переменная для данной итерации (ее и будем менять местами с текущей)
-            for (int i = 0; i < arr.Length; i++)
-            {
-                for (int j = i+1; j < arr.Length; j++)
-                {
-                    if (arr[j] < arr[i])
-                    {
-                        temp = arr[i];
-                        arr[i] = arr[j];
-                        arr[j] = temp;
-                    } 
-                }
-            }
-        }
-
-        private static void ShowArray(ref int[] arr, bool sort = false )  //выводим элементы массива на консоль
-        {
-            if (sort)
-            {
-                SortArray(arr);
-            }
-            Console.Write("Вот элементы массива: ");
-            foreach (int i in arr)
-            {
-                Console.Write(i + " ");
-            }
-            Console.WriteLine();
-        }
-
-        private static int[] GetArrayFromConsole(int arrLen = 3)    //вводим элементы массива с консоли
-        {
-            int[] myArray = new int[arrLen];
-            for(int i=0; i<arrLen; i++)
-            {
-                Console.Write($"Введите целое число - элемент массива номер {i+1} из {arrLen}: ");
-                bool enteredInt = int.TryParse(Console.ReadLine(), out myArray[i]);
-            }
-            return myArray;
-        }
-
-        private static int[] GetArrayFromConsoleRef(ref int arrLen)    //вводим элементы массива с консоли
-        {
-            arrLen = 6;
-            int[] myArray = new int[arrLen];
-            for (int i = 0; i < arrLen; i++)
-            {
-                Console.Write($"Введите целое число - элемент массива номер {i + 1} из {arrLen}: ");
-                bool enteredInt = int.TryParse(Console.ReadLine(), out myArray[i]);
-            }
-            return myArray;
-        }
-
-        static string GetColorFromConsole() => Console.ReadLine().ToLower();  //нужны ли такие "однооператорные" методы? Попросить пару примеров, когда они нужны
-        private static void ShowColor(string color, string text = "Вы выбрали")  //Временно меняем цвет фона консоли на выбранный цвет
-        {
-            ConsoleColor initForeground = Console.ForegroundColor;
-            ConsoleColor initBackground = Console.BackgroundColor;
-            Console.ForegroundColor = ConsoleColor.Black;
-            switch (color)
-            {
-                case "cyan":
-                    Console.BackgroundColor = ConsoleColor.Cyan;
-                    break;
-                case "red":
-                    Console.BackgroundColor = ConsoleColor.Red;
-                    break;
-                case "green":
-                    Console.BackgroundColor = ConsoleColor.Green;
-                    break;
-                default:
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    Console.Write($"{(text == "Вы выбрали" ? "(Такого цвета нет в меню, получите серый ) " : "")}");
-                    break;
-            }
-            Console.WriteLine($"{text} {color}");
-            Console.ForegroundColor = initForeground;
-            Console.BackgroundColor = initBackground;
-        }
-
-        private static void PrintUser((string Name, int Age, string[] favColors) user)
-        {
-            Console.WriteLine("Информация о пользвоателе: ");
-            Console.Write($"Имя: {user.Name}; Вoзраст: {user.Age}; Любимые цвета: ");
-            PrintColors(user.favColors);
-        }
-
-        private static void PrintColors(string[] favColors)
-        {
-            ConsoleColor currentForeground = Console.ForegroundColor;
-            ConsoleColor currentBackground = Console.BackgroundColor;
-            foreach (string item in favColors)
-            {
-                Console.ForegroundColor = ConsoleColor.Black;
-                switch (item)
-                {
-                    case "red":
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        break;
-                    case "green":
-                        Console.BackgroundColor = ConsoleColor.Green;
-                        break;
-                    case "cyan":
-                        Console.BackgroundColor = ConsoleColor.Cyan;
-                        break;
-                    default:
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.Write("(используем серый вместо) ");
-                        break;
-                }
-                Console.Write(" " + item + " ");
-            }
-            Console.ForegroundColor = currentForeground;
-            Console.BackgroundColor = currentBackground;
-            Console.WriteLine();
-        }
-
-        private static (string Name, int Age, string[] favColors) EnterUserFromConsole()
-        {
-            //вводим информацию о пользователи с консоли
-            const int colorsLen = 3; //длина массива цветов
-            Console.Write("Введите имя: ");
-            string name = Console.ReadLine();
-            Console.Write("Введите возраст (целое число цифрами): ");
-            int age;
-            bool ageIsCorrect = Int32.TryParse(Console.ReadLine(), out age);
-            string[] colors = new string[colorsLen];
-            for (int i = 0; i < colorsLen; i++)
-            {
-                Console.Write("{2}, введите название цвета на английском ({0} из {1}): ", i + 1, colorsLen, name); //исправлено в соотв. с требованием 5.2.3
-                colors[i] = Console.ReadLine().ToLower();
-            }
-            return (name, age, colors);
-        }
-        #endregion
 
     }
 }
